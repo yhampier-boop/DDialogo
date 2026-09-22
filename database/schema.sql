@@ -1,0 +1,2 @@
+-- Importar aqui el script MySQL de DialogoDesarrollo
+-- Compatible con phpMyAdmin

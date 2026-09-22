@@ -1,0 +1,5 @@
+﻿# Permitir acceso al admin
+Require all granted
+
+# Redirigir index.php a login.php
+DirectoryIndex login.php

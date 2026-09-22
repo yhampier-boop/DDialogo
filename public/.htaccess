@@ -1,0 +1,3 @@
+﻿# Permitir acceso a la parte pública
+Require all granted
+DirectoryIndex index.php

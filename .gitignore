@@ -1,0 +1,10 @@
+config.local.php
+*.env
+.env
+.vscode/
+.idea/
+node_modules/
+*.log
+*.tmp
+uploads/*
+!uploads/.gitkeep

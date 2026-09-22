@@ -1,0 +1,794 @@
+﻿<?php
+// index.php - Página de inicio con reportaje destacado
+require_once 'config/database.php';
+
+// Obtener el reportaje MÁS RECIENTE (destacado)
+$stmt = $pdo->query("SELECT * FROM reportajes ORDER BY fecha_publicacion DESC LIMIT 1");
+$reportaje_destacado = $stmt->fetch();
+
+// Obtener los siguientes reportajes
+$stmt = $pdo->query("SELECT * FROM reportajes ORDER BY fecha_publicacion DESC LIMIT 3 OFFSET 1");
+$reportajes = $stmt->fetchAll();
+
+// Obtener noticias
+$stmt = $pdo->query("SELECT * FROM noticias ORDER BY fecha_publicacion DESC LIMIT 6");
+$noticias = $stmt->fetchAll();
+
+// Obtener boletines
+$stmt = $pdo->query("SELECT * FROM boletines ORDER BY fecha_publicacion DESC LIMIT 1");
+$boletin_destacado = $stmt->fetch();
+
+// Obtener podcasts
+$stmt = $pdo->query("SELECT * FROM podcasts ORDER BY fecha_publicacion DESC LIMIT 4");
+$podcasts = $stmt->fetchAll();
+
+// Obtener VIDEOS de la base de datos
+$stmt = $pdo->query("SELECT * FROM videos ORDER BY fecha_publicacion DESC LIMIT 8");
+
+
+
+$videos = $stmt->fetchAll();
+
+
+
+function fechaMes($fecha) {
+    if (empty($fecha)) return '';
+    return date('M d, Y', strtotime($fecha));
+}
+
+function fechaDiaMes($fecha) {
+    if (empty($fecha)) return '';
+    setlocale(LC_TIME, 'es_ES.utf8', 'es_ES', 'spanish');
+    return strftime('%d de %B', strtotime($fecha));
+}
+
+function obtenerImagenReportaje($item) {
+    if (!empty($item['foto_principal'])) {
+        return $item['foto_principal'];
+    }
+    return 'assets/images/reportaje-18-08-26.jpg';
+}
+
+function obtenerImagenNoticia($item) {
+    if (!empty($item['foto'])) {
+        return $item['foto'];
+    }
+    return 'assets/images/nota-facebook-21-11-25.png';
+}
+
+function obtenerLinkNoticia($item) {
+    if (!empty($item['link_externo'])) {
+        return $item['link_externo'];
+    }
+    return 'noticia.php?id=' . $item['id'];
+}
+
+function targetBlank($item) {
+    return !empty($item['link_externo']) ? 'target="_blank"' : '';
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>DDP Noticias - Diálogo y Desarrollo Perú</title>
+    <link href="https://fonts.googleapis.com/css?family=Cabin:400,500,600&amp;subset=latin-ext,vietnamese" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style-starter.css">
+    
+    <style>
+        /* ============================================
+           REPORTAJE DESTACADO GRANDE
+           ============================================ */
+        
+        .reportaje-destacado {
+            background: #fafafa;
+            padding: 60px 0;
+        }
+        
+        .reportaje-destacado .imagen-destacada {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .reportaje-destacado .imagen-destacada img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px;
+        }
+        
+        .reportaje-destacado .contenido-destacado {
+            padding: 20px 0 20px 40px;
+        }
+        
+        .reportaje-destacado .fecha-destacada {
+            font-size: 16px;
+            color: #999;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+        
+        .reportaje-destacado .titulo-destacado {
+            font-size: 36px;
+            font-weight: 700;
+            color: #e74c3c;
+            line-height: 1.2;
+            margin-bottom: 25px;
+        }
+        
+        .reportaje-destacado .titulo-destacado a {
+            color: #e74c3c;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .reportaje-destacado .titulo-destacado a:hover {
+            color: #c0392b;
+        }
+        
+        .reportaje-destacado .resumen-destacado {
+            font-size: 18px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .reportaje-destacado .btn-leer-destacado {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 18px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .reportaje-destacado .btn-leer-destacado:hover {
+            color: #e74c3c;
+        }
+        
+        .reportaje-destacado .btn-leer-destacado .fa-arrow-right {
+            transition: transform 0.3s ease;
+        }
+        
+        .reportaje-destacado .btn-leer-destacado:hover .fa-arrow-right {
+            transform: translateX(5px);
+        }
+        
+        /* ============================================
+           TARJETAS DE REPORTAJES
+           ============================================ */
+        
+        .grids5-info {
+            background: #ffffff;
+            border-radius: 15px !important;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30px;
+            border: none !important;
+        }
+        
+        .grids5-info:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .grids5-info .card-image {
+            display: block;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            background: #f0f0f0;
+            border-radius: 15px 15px 0 0 !important;
+            flex-shrink: 0;
+        }
+        
+        .grids5-info .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .grids5-info:hover .card-image img {
+            transform: scale(1.05);
+        }
+        
+        .grids5-info .card-content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            background: #ffffff;
+        }
+        
+        .grids5-info .card-date {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+        
+        .grids5-info .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            flex: 1;
+            min-height: 50px;
+        }
+        
+        .grids5-info .card-title a {
+            color: #1a1a2e;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .grids5-info .card-title a:hover {
+            color: #e74c3c;
+        }
+        
+        .grids5-info .card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #e74c3c;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: auto;
+        }
+        
+        .grids5-info .card-link:hover {
+            color: #c0392b;
+        }
+        
+        .grids5-info .card-link .fa-arrow-right {
+            transition: transform 0.3s ease;
+        }
+        
+        .grids5-info .card-link:hover .fa-arrow-right {
+            transform: translateX(5px);
+        }
+        
+        /* ESPACIADO */
+        .grids-block-5 .row > [class*="col-"] {
+            margin-bottom: 30px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb-area {
+            background: #fafafa;
+            padding: 40px 0;
+        }
+        
+        .breadcrumb-area .title-big {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin: 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .reportaje-destacado .contenido-destacado {
+                padding: 20px 0 0 0;
+            }
+            .reportaje-destacado .titulo-destacado {
+                font-size: 24px;
+            }
+            .reportaje-destacado .resumen-destacado {
+                font-size: 16px;
+            }
+        }
+    </style>
+    
+    
+
+
+
+
+
+
+<style>
+/* ============================================
+   ESPACIO MODERADO ENTRE SECCIONES
+   ============================================ */
+
+/* Todas las secciones con espacio consistente */
+section.w3l-homeblock3,
+section.w3l-homeblock5,
+section.w3l-banner,
+section.w3l-team,
+div.middle {
+    margin-top: 40px !important;
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+}
+
+/* Sección de noticias/reportajes (grid) */
+div.grids-block-5 {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+}
+
+/* Breadcrumb (título de sección) */
+section.breadcrumb-area {
+    margin-top: 20px !important;
+    margin-bottom: 0 !important;
+    padding-top: 30px !important;
+    padding-bottom: 15px !important;
+}
+
+/* Footer */
+section.w3l-footer-29-main {
+    margin-top: 40px !important;
+}
+
+/* ============================================
+   BOTÓN "VER TODOS"
+   ============================================ */
+
+.btn-ver-todos-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-top: 30px !important;
+    margin-bottom: 20px !important;
+    padding: 0 !important;
+}
+
+.btn-ver-todos {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 15px 45px !important;
+    background: #e0020d !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    font-family: 'Cabin', sans-serif !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    text-align: center !important;
+}
+
+.btn-ver-todos:hover {
+    background: #c0020b !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(224, 2, 13, 0.4);
+}
+
+/* ============================================
+   PODCASTS - TARJETAS BLANCAS
+   ============================================ */
+
+section.w3l-homeblock3 .area-box {
+    background: #ffffff !important;
+    border-radius: 15px !important;
+    padding: 30px 20px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.3s ease !important;
+    text-align: center !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+section.w3l-homeblock3 .area-box:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15) !important;
+}
+
+section.w3l-homeblock3 .area-box img {
+    width: 70px !important;
+    height: 70px !important;
+    margin-bottom: 20px !important;
+    background: #e0020d !important;
+    border-radius: 50% !important;
+    padding: 15px !important;
+}
+
+section.w3l-homeblock3 .area-box p {
+    font-size: 14px !important;
+    color: #666 !important;
+    line-height: 1.6 !important;
+    margin: 0 !important;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER ORIGINAL -->
+<header id="site-header" class="fixed-top">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg stroke">
+            <a class="navbar-brand" href="index.php">
+                <img src="assets/images/logo.png" alt="Logo" style="height:75px;" />
+            </a>
+            <button class="navbar-toggler collapsed bg-gradient" type="button" data-toggle="collapse"
+                data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+                <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active"><a class="nav-link" href="index.php">Inicio <span class="sr-only">(current)</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="actualidad.php">Actualidad</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reportajes.php">Reportajes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="podcasts.php">Podcast</a></li>
+                    <li class="nav-item"><a class="nav-link" href="boletines.php">Boletín NTEP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="alianzas.php">Alianzas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.php">Sobre D&D</a></li>
+                    <li class="ml-2"><a href="contact.html" class="btn btn-style btn-outline-secondary">Contacto</a></div>
+        </nav>
+    </div>
+</header>
+
+<!-- SECCIÓN REPORTAJE DESTACADO -->
+<?php if ($reportaje_destacado): ?>
+<section class="reportaje-destacado">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Imagen del reportaje -->
+            <div class="col-lg-7">
+                <div class="imagen-destacada">
+                    <a href="reportaje.php?id=<?= $reportaje_destacado['id'] ?>">
+                        <img src="<?= htmlspecialchars(obtenerImagenReportaje($reportaje_destacado)) ?>" alt="<?= htmlspecialchars($reportaje_destacado['titulo']) ?>" />
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Contenido del reportaje -->
+            <div class="col-lg-5">
+                <div class="contenido-destacado">
+                    <div class="fecha-destacada"><?= fechaMes($reportaje_destacado['fecha_publicacion']) ?></div>
+                    <h2 class="titulo-destacado">
+                        <a href="reportaje.php?id=<?= $reportaje_destacado['id'] ?>">
+                            <?= htmlspecialchars($reportaje_destacado['titulo']) ?>
+                        </a>
+                    </h2>
+                    <?php if (!empty($reportaje_destacado['resumen_corto'])): ?>
+                        <p class="resumen-destacado"><?= htmlspecialchars($reportaje_destacado['resumen_corto']) ?></p>
+                    <?php elseif (!empty($reportaje_destacado['desarrollo'])): ?>
+                        <p class="resumen-destacado"><?= htmlspecialchars(substr($reportaje_destacado['desarrollo'], 0, 250)) ?>...</p>
+                    <?php endif; ?>
+                    <a href="reportaje.php?id=<?= $reportaje_destacado['id'] ?>" class="btn-leer-destacado">
+                        Leer <span class="fa fa-arrow-right"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- SECCIÓN MÁS REPORTAJES -->
+<?php if (count($reportajes) > 0): ?>
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="title-big">Más Reportajes</h2>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="grids-block-5">
+    <div class="container">
+        <div class="row">
+            <?php foreach ($reportajes as $reportaje): ?>
+                <div class="col-lg-4 col-md-6">
+                    <div class="grids5-info">
+                        <a href="reportaje.php?id=<?= $reportaje['id'] ?>" class="card-image">
+                            <img src="<?= htmlspecialchars(obtenerImagenReportaje($reportaje)) ?>" alt="<?= htmlspecialchars($reportaje['titulo']) ?>" />
+                        </a>
+                        <div class="card-content">
+                            <div class="card-date"><?= fechaMes($reportaje['fecha_publicacion']) ?></div>
+                            <h4 class="card-title">
+                                <a href="reportaje.php?id=<?= $reportaje['id'] ?>">
+                                    <?= htmlspecialchars($reportaje['titulo']) ?>
+                                </a>
+                            </h4>
+                            <a href="reportaje.php?id=<?= $reportaje['id'] ?>" class="card-link">
+                                Leer <span class="fa fa-arrow-right"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="pagination text-center"><a href="reportajes.php" class="btn-ver-todos">Ver Todos</a></div>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- SECCIÓN NOTICIAS -->
+<section class="breadcrumb-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="title-big">Noticias Recientes</h2>
+                <a class="anchor" id="actualidad"></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="grids-block-5">
+    <div class="container">
+        <div class="row">
+            <?php if (count($noticias) > 0): ?>
+                <?php foreach ($noticias as $noticia): ?>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="grids5-info">
+                            <a href="<?= obtenerLinkNoticia($noticia) ?>" class="card-image" <?= targetBlank($noticia) ?>>
+                                <img src="<?= htmlspecialchars(obtenerImagenNoticia($noticia)) ?>" alt="<?= htmlspecialchars($noticia['titulo']) ?>" />
+                            </a>
+                            <div class="card-content">
+                                <div class="card-date"><?= fechaMes($noticia['fecha_publicacion']) ?></div>
+                                <h4 class="card-title">
+                                    <a href="<?= obtenerLinkNoticia($noticia) ?>" <?= targetBlank($noticia) ?>>
+                                        <?= htmlspecialchars($noticia['titulo']) ?>
+                                    </a>
+                                </h4>
+                                <a href="<?= obtenerLinkNoticia($noticia) ?>" class="card-link" <?= targetBlank($noticia) ?>>
+                                    Leer <span class="fa fa-arrow-right"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12 text-center"><p>No hay noticias disponibles</p></div>
+            <?php endif; ?>
+        </div>
+        <div class="pagination text-center"><a href="actualidad.php" class="btn-ver-todos">Ver Todas Las Noticias</a></div>
+    </div>
+</div>
+
+<!-- SECCIÓN BOLETÍN -->
+<?php if ($boletin_destacado): ?>
+<section class="w3l-homeblock5 py-0" style="margin-top: 30px;">
+    <div class="container py-lg-5 py-4">
+        <div class="row">
+            <div class="col-lg-8 align-self">
+                <h3 class="title-big mb-4">Boletín NTEP Año <?= date('Y', strtotime($boletin_destacado['fecha_publicacion'])) ?></h3>
+                <?php if (!empty($boletin_destacado['resumen'])): ?>
+                    <?php 
+                    $resumenes = explode("\n", $boletin_destacado['resumen']);
+                    foreach ($resumenes as $resumen_item): 
+                        if (trim($resumen_item)): 
+                    ?>
+                        <p class="">- <?= htmlspecialchars(trim($resumen_item)) ?></p>
+                    <?php 
+                        endif;
+                    endforeach; 
+                    ?>
+                <?php endif; ?>
+                <div class="row mt-sm-4 mt-2 px-3">
+                    <div class="col-6 p-0">
+                        <span>Nº <?= htmlspecialchars(str_replace('BOL-', '', $boletin_destacado['numero_boletin'])) ?></span>
+                        <h4><?= fechaDiaMes($boletin_destacado['fecha_publicacion']) ?></h4>
+                    </div>
+                    <div class="col-6 p-0">
+                        <?php if (!empty($boletin_destacado['archivo_pdf'])): ?>
+                            <span>
+                                <a target="_blank" href="<?= htmlspecialchars($boletin_destacado['archivo_pdf']) ?>" class="facebook">
+                                    <span class="fa fa-download"></span>
+                                </a>
+                            </span>
+                            <h4>Ver Boletín</h4>
+                        <?php endif; ?>
+                    </div>
+                    <center><a href="boletines.php" class="btn-ver-todos">Ver Todos</a></center>
+                </div>
+            </div>
+            <div class="col-lg-4 mt-lg-0 mt-4">
+                <?php if (!empty($boletin_destacado['foto_portada'])): ?>
+                    <img src="<?= htmlspecialchars($boletin_destacado['foto_portada']) ?>" class="img-fluid radius-image" alt="Boletín">
+                <?php else: ?>
+                    <img src="assets/images/boletin-ntep-45.png" class="img-fluid radius-image" alt="Boletín NTEP">
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
+<!-- SECCIÓN PODCAST -->
+<section class="w3l-homeblock3 py-5" style="margin-top: 30px;">
+    <div class="container py-lg-5 py-md-4">
+        <h3 class="title-big mb-5 text-center">Podcast</h3>
+        <div class="row">
+            <?php if (count($podcasts) > 0): ?>
+                <?php foreach ($podcasts as $i => $podcast): ?>
+                    <div class="col-lg-3 col-sm-6 <?= $i > 0 ? 'mt-5 mt-lg-0' : '' ?>">
+                        <div class="area-box">
+                            <img src="assets/images/podcast.png">
+                            <p><?= htmlspecialchars($podcast['titulo']) ?></p>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12 text-center"><p>No hay podcasts disponibles</p></div>
+            <?php endif; ?>
+        </div>
+        <center><a href="podcasts.php" class="btn-ver-todos">Ver Todos</a></center>
+    </div>
+</section>
+
+
+<!-- SECCIÓN VIDEOS (desde la BD) -->
+<section class="w3l-team" id="team">
+    <div class="teams1 py-5 mb-3">
+        <div class="container py-lg-3 pb-lg-5 pb-4">
+            <div class="teams1-content">
+                <h3 class="title-big text-center mb-5">Videos</h3>
+                <?php if (count($videos) > 0): ?>
+                    <div class="row justify-content-center">
+                        <?php foreach ($videos as $video): ?>
+                            <?php
+                            // Extraer el ID de YouTube de la URL
+                            $url_video = $video['url_embed'];
+                            $video_id = '';
+                            
+                            if (preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $url_video, $m)) {
+                                $video_id = $m[1];
+                            } elseif (preg_match('/youtu\.be\/([a-zA-Z0-9_-]+)/', $url_video, $m)) {
+                                $video_id = $m[1];
+                            } elseif (preg_match('/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/', $url_video, $m)) {
+                                $video_id = $m[1];
+                            }
+                            
+                            $imagen_video = $video_id 
+                                ? "https://img.youtube.com/vi/{$video_id}/hqdefault.jpg" 
+                                : "assets/images/video.jpg";
+                            ?>
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="video-card" style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column;">
+                                    <a href="<?= htmlspecialchars($video['url_embed']) ?>" target="_blank" style="display: block; position: relative; height: 200px; overflow: hidden; background: #000;">
+                                        <img src="<?= $imagen_video ?>" alt="<?= htmlspecialchars($video['titulo']) ?>" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='assets/images/video.jpg'" />
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: #e0020d; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(224,2,13,0.5);">
+                                            <i class="fa fa-play" style="color: #fff; font-size: 24px; margin-left: 5px;"></i>
+                                        </div>
+                                    </a>
+                                    <div style="padding: 20px; display: flex; flex-direction: column; flex: 1;">
+                                        <h4 style="font-size: 16px; font-weight: 600; color: #1a1a2e; line-height: 1.4; margin-bottom: 10px; flex: 1;">
+                                            <?= htmlspecialchars($video['titulo']) ?>
+                                        </h4>
+                                        <small style="color: #999; font-size: 13px;">
+                                            <i class="far fa-calendar-alt"></i> <?= fechaMes($video['fecha_publicacion']) ?>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="text-center"><p>No hay videos disponibles</p></div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- REDES SOCIALES -->
+<div class="middle py-5" style="margin-top: 30px;">
+    <div class="container py-xl-5 py-lg-3">
+        <div class="welcome-left text-center py-md-5 py-3">
+            <h3 class="title-big">Síguenos en nuestras Redes Sociales</h3>
+            <div class="main-social-footer-29">
+                <a target="_blank" href="https://www.facebook.com/DialogoyDesarrolloPeru" class="facebook"><span class="fa fa-facebook-square fa-2x"></span></a>
+                <a target="_blank" href="https://www.tiktok.com/@dialogo.y.desarrollo" class="twitter"><img src="assets/images/tiktokg.png"></a>
+                <a target="_blank" href="https://www.instagram.com/dialogo.y.desarrollo/" class="instagram"><span class="fa fa-instagram fa-2x"></span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<section class="w3l-footer-29-main py-5" id="footer">
+    <div class="footer-29 py-md-3">
+        <div class="container">
+            <div class="row footer-top-29">
+                <div class="col-lg-6 col-md-6 footer-list-29 footer-1">
+                    <h6 class="footer-title-29">Quiénes Somos</h6>
+                    <p>Somos un espacio de periodismo independiente que busca visibilizar las acciones de diálogo en el país desde una mirada constructiva.</p>
+                    <div class="main-social-footer-29">
+                        <a target="_blank" href="https://www.facebook.com/DialogoyDesarrolloPeru" class="facebook"><span class="fa fa-facebook-square"></span></a>
+                        <a target="_blank" href="https://www.tiktok.com/@dialogo.y.desarrollo" class="twitter"><img src="assets/images/tiktokp.png"></a>
+                        <a target="_blank" href="https://www.instagram.com/dialogo.y.desarrollo/" class="instagram"><span class="fa fa-instagram"></span></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 footer-list-29 footer-2 mt-md-0 mt-5">
+                    <ul>
+                        <h6 class="footer-title-29">Contenido</h6>
+                        <li><a href="reportajes.php">Reportajes</a></li>
+                        <li><a href="podcasts.php">Podcast</a></li>
+                        <li><a href="boletines.php">Boletines</a></div>
+                <div class="col-lg-3 col-md-6 mt-lg-0 mt-5 footer-list-29 footer-3">
+                    <div class="properties">
+                        <h6 class="footer-title-29">Contacto</h6>
+                        <ul>
+                            <li><a href="#url">info@dialogoydesarrollo.com.pe</a></div>
+                </div>
+            </div>
+            <div class="bottom-copies text-center">
+                <p class="copy-footer-29">© 2026 Diálogo y Desarrollo Perú. All rights reserved | Designed by <a target="_blank" href="https://www.wsperu.info/">WebSolutions</a></p>
+            </div>
+        </div>
+    </div>
+    <button onclick="topFunction()" id="movetop" title="Go to top"><span class="fa fa-angle-up"></span></button>
+</section>
+
+<script src="assets/js/jquery-3.3.1.min.js"></script>
+<script src="assets/js/theme-change.js"></script>
+<script src="assets/js/easyResponsiveTabs.js"></script>
+<script src="assets/js/owl.carousel.js"></script>
+<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script>
+    window.onscroll = function () { scrollFunction(); };
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            document.getElementById("movetop").style.display = "block";
+        } else {
+            document.getElementById("movetop").style.display = "none";
+        }
+    }
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+    $(document).ready(function () {
+        $('.owl-carousel').owlCarousel({
+            loop: true, margin: 0, responsiveClass: true,
+            responsive: {
+                0: { items: 1, nav: true },
+                400: { items: 2, nav: true, margin: 20 },
+                768: { items: 3, nav: true, margin: 20 },
+                1000: { items: 4, nav: true, loop: true, margin: 25 }
+            }
+        })
+    });
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

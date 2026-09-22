@@ -1,0 +1,63 @@
+﻿<?php
+// reportaje_ver.php
+require_once 'config/database.php';
+session_start();
+
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($id <= 0) {
+    header('Location: index.php');
+    exit;
+}
+
+$stmt = $pdo->prepare("
+    SELECT r.*, a.nombres as autor_nombre, a.ap_paterno as autor_apellido
+    FROM reportajes r
+    LEFT JOIN autores a ON r.autor_id = a.id
+    WHERE r.id = ?
+");
+$stmt->execute([$id]);
+$reportaje = $stmt->fetch();
+
+if (!$reportaje) {
+    header('Location: index.php');
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars($reportaje['titulo']) ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <article>
+                    <?php if ($reportaje['foto_principal']): ?>
+                        <img src="<?= htmlspecialchars($reportaje['foto_principal']) ?>" class="img-fluid rounded mb-4">
+                    <?php endif; ?>
+                    <h1><?= htmlspecialchars($reportaje['titulo']) ?></h1>
+                    <div class="text-muted mb-4">
+                        <i class="far fa-calendar-alt"></i> <?= date('d/m/Y', strtotime($reportaje['fecha_publicacion'])) ?>
+                        <?php if ($reportaje['autor_nombre']): ?>
+                            | <i class="far fa-user"></i> <?= htmlspecialchars($reportaje['autor_nombre'] . ' ' . $reportaje['autor_apellido']) ?>
+                        <?php endif; ?>
+                    </div>
+                    <?php if ($reportaje['resumen_corto']): ?>
+                        <div class="alert alert-secondary"><?= nl2br(htmlspecialchars($reportaje['resumen_corto'])) ?></div>
+                    <?php endif; ?>
+                    <div><?= nl2br(htmlspecialchars($reportaje['desarrollo'])) ?></div>
+                    <?php if ($reportaje['pdf_adjunto']): ?>
+                        <a href="<?= htmlspecialchars($reportaje['pdf_adjunto']) ?>" class="btn btn-danger mt-3" target="_blank"><i class="fas fa-file-pdf"></i> Descargar PDF</a>
+                    <?php endif; ?>
+                </article>
+                <a href="reportajes_lista.php" class="btn btn-secondary mt-4"><i class="fas fa-arrow-left"></i> Volver</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

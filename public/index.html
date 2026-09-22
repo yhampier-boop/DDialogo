@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diálogo y Desarrollo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 60px 50px;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+        }
+        h1 {
+            color: #1a1a2e;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        h1 span {
+            color: #e74c3c;
+        }
+        p {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        .icon {
+            font-size: 56px;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        .btn-admin {
+            display: inline-block;
+            padding: 12px 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        .btn-admin:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+        .btn-public {
+            display: inline-block;
+            padding: 12px 35px;
+            background: #1a1a2e;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        .btn-public:hover {
+            background: #2c3e50;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📰</div>
+        <h1>Diálogo y <span>Desarrollo</span></h1>
+        <p>Periodismo de investigación sobre minería, desarrollo y recursos naturales en el Perú</p>
+        <div class="buttons">
+            <a href="../admin/login.php" class="btn-admin">
+                🔐 Panel de Administración
+            </a>
+        </div>
+    </div>
+</body>
+</html>
