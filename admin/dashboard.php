@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // admin/dashboard.php
 session_start();
 require_once '../config/database.php';
@@ -326,7 +326,7 @@ $stats = getEstadisticas($pdo);
     <!-- SIDEBAR -->
     <div class="sidebar">
         <div class="logo-container">
-            <img src="/Dialogoydesarrollo/assets/images/iconos/logo.png" alt="Diálogo y Desarrollo">
+            <img src="../assets/images/iconos/logo.png" alt="Diálogo y Desarrollo">
         </div>
         
         <div class="user-info">

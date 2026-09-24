@@ -91,6 +91,42 @@ function fechaFormateada($fecha) {
     button.navbar-toggler[aria-expanded="true"] .icon-bars { display: none !important; }
     button.navbar-toggler[aria-expanded="true"] .icon-close-x { display: inline-block !important; }
 </style>
+<style>
+/* ============================================
+   COMPENSAR HEADER FIJO - ESTILO BOLETIN
+   ============================================ */
+section.breadcrumb-area {
+    padding-top: 140px !important;
+    padding-bottom: 40px !important;
+    margin-top: 0 !important;
+    background: #fafafa !important;
+}
+.breadcrumb-area .container {
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+}
+.breadcrumb-area .title-big,
+.breadcrumb-area h2.title-big {
+    font-size: 42px !important;
+    font-weight: 700 !important;
+    color: #1a1a2e !important;
+    margin: 0 0 15px 0 !important;
+    padding: 0 !important;
+    line-height: 1.2 !important;
+}
+.breadcrumb-area p {
+    color: #999 !important;
+    font-size: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+/* Ocultar breadcrumbs viejos si existen */
+.breadcrumb-area .breadcrumb {
+    display: none !important;
+}
+</style>
 </head>
 <body>
 

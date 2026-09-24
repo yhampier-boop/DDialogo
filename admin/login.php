@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // admin/login.php
 session_start();
 require_once __DIR__ . '/../config/database.php';
@@ -198,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="login-card">
             
             <div class="login-header">
-                <img src="/Dialogoydesarrollo/assets/images/iconos/logo.png" alt="Diálogo y Desarrollo" class="logo">
+                <img src="../assets/images/iconos/logo.png" alt="Diálogo y Desarrollo" class="logo">
                 <h1>Panel de Administración</h1>
                 <p>Diálogo y Desarrollo Perú</p>
             </div>

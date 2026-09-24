@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../libs/mail_helper.php';
 session_start();
@@ -102,7 +102,7 @@ h1 { font-size: 24px; font-weight: 700; color: #1a1a2e; text-align: center; marg
 </head>
 <body>
 <div class="card">
-    <img src="/Dialogoydesarrollo/assets/images/iconos/logo.png" alt="Logo" style="max-width: 180px; margin: 0 auto 20px; display:block;">
+    <img src="../assets/images/iconos/logo.png" alt="Logo" style="max-width: 180px; margin: 0 auto 20px; display:block;">
     <h1>Recuperar Contrasena</h1>
     <p style="color:#999; font-size:14px; text-align:center; margin-bottom:25px;">Ingresa tu correo y te enviaremos un enlace</p>
     

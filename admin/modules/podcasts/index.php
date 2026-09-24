@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // admin/modules/podcasts/index.php
 require_once '../../../config/database.php';
 session_start();
@@ -47,7 +47,7 @@ $items = $pdo->query("SELECT * FROM podcasts ORDER BY fecha_publicacion DESC")->
 
 <div class="sidebar" style="background: #ffffff !important; background-color: #ffffff !important; box-shadow: 2px 0 15px rgba(0,0,0,0.06) !important; border-right: 1px solid #f0f0f0 !important;">
     <div class="logo-container">
-        <img src="/Dialogoydesarrollo/assets/images/iconos/logo.png" alt="Diálogo y Desarrollo">
+        <img src="../../../assets/images/iconos/logo.png" alt="Diálogo y Desarrollo">
     </div>
     <div class="user-info">
         <div class="name" style="color: #1a1a2e !important;"><?= htmlspecialchars($_SESSION['usuario_nombre'] ?? 'Administrador') ?></div>
