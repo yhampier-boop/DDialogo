@@ -1,0 +1,14 @@
+﻿# Permitir imagenes
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|pdf|svg)$">
+    Require all granted
+</FilesMatch>
+
+# Bloquear todo lo demás
+<FilesMatch "\.(php|php3|php4|php5|php7|phtml|pl|py|jsp|asp|sh|cgi)$">
+    Require all denied
+</FilesMatch>
+
+# Deshabilitar ejecucion de PHP en esta carpeta
+php_flag engine off
+Options -ExecCGI
+AddHandler cgi-script .php .pl .py .jsp .asp .sh .cgi

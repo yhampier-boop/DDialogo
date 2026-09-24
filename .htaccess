@@ -1,0 +1,36 @@
+﻿# ============================================
+# SEGURIDAD - Dialogo y Desarrollo
+# ============================================
+
+# Deshabilitar listado de directorios
+Options -Indexes
+
+# Bloquear acceso a archivos sensibles
+<FilesMatch "\.(sql|log|md|env|ini|bak|old|sh|gitignore)$">
+    Require all denied
+</FilesMatch>
+
+# Bloquear archivos especificos
+<Files "config.php">
+    Require all denied
+</Files>
+<Files "mail.php">
+    Require all denied
+</Files>
+
+# Redirigir index.html a index.php
+DirectoryIndex index.php
+
+# Proteger contra XSS
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Bloquear acceso a archivos ocultos (excepto .well-known)
+RedirectMatch 403 /\..*$
+
+# Limitar tamano de subida (10 MB)
+LimitRequestBody 10485760
