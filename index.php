@@ -46,14 +46,14 @@ function obtenerImagenReportaje($item) {
     if (!empty($item['foto_principal'])) {
         return $item['foto_principal'];
     }
-    return 'assets/images/reportaje-18-08-26.jpg';
+    return 'assets/images/reportajes/reportaje-18-08-26.jpg';
 }
 
 function obtenerImagenNoticia($item) {
     if (!empty($item['foto'])) {
         return $item['foto'];
     }
-    return 'assets/images/nota-facebook-21-11-25.png';
+    return 'assets/images/noticias/nota-facebook-21-11-25.png';
 }
 
 function obtenerLinkNoticia($item) {
@@ -74,7 +74,8 @@ function targetBlank($item) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>DDP Noticias - Diálogo y Desarrollo Perú</title>
     <link href="https://fonts.googleapis.com/css?family=Cabin:400,500,600&amp;subset=latin-ext,vietnamese" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style-starter.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="assets/css/style-starter.css">
     
     <style>
         /* ============================================
@@ -410,6 +411,25 @@ section.w3l-homeblock3 .area-box p {
     margin: 0 !important;
 }
 </style>
+<!-- FontAwesome preload + fallback inline -->
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+    @font-face {
+        font-family: 'FontAwesome';
+        src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2') format('woff2'),
+             url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff') format('woff'),
+             url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: block;
+    }
+    .fa, .fas, .far, .fab { font-family: 'FontAwesome' !important; }
+</style>
+<style>
+    .icon-close-x { display: none !important; }
+    button.navbar-toggler[aria-expanded="true"] .icon-bars { display: none !important; }
+    button.navbar-toggler[aria-expanded="true"] .icon-close-x { display: inline-block !important; }
+</style>
 </head>
 <body>
 
@@ -418,13 +438,13 @@ section.w3l-homeblock3 .area-box p {
     <div class="container">
         <nav class="navbar navbar-expand-lg stroke">
             <a class="navbar-brand" href="index.php">
-                <img src="assets/images/logo.png" alt="Logo" style="height:75px;" />
+                <img src="assets/images/iconos/logo.png" alt="Logo" style="height:75px;" />
             </a>
             <button class="navbar-toggler collapsed bg-gradient" type="button" data-toggle="collapse"
                 data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
                 aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
-                <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul class="navbar-nav ml-auto">
@@ -469,7 +489,7 @@ section.w3l-homeblock3 .area-box p {
                         <p class="resumen-destacado"><?= htmlspecialchars(substr($reportaje_destacado['desarrollo'], 0, 250)) ?>...</p>
                     <?php endif; ?>
                     <a href="reportaje.php?id=<?= $reportaje_destacado['id'] ?>" class="btn-leer-destacado">
-                        Leer <span class="fa fa-arrow-right"></span>
+                        Leer &rarr;
                     </a>
                 </div>
             </div>
@@ -507,7 +527,7 @@ section.w3l-homeblock3 .area-box p {
                                 </a>
                             </h4>
                             <a href="reportaje.php?id=<?= $reportaje['id'] ?>" class="card-link">
-                                Leer <span class="fa fa-arrow-right"></span>
+                                Leer &rarr;
                             </a>
                         </div>
                     </div>
@@ -549,7 +569,7 @@ section.w3l-homeblock3 .area-box p {
                                     </a>
                                 </h4>
                                 <a href="<?= obtenerLinkNoticia($noticia) ?>" class="card-link" <?= targetBlank($noticia) ?>>
-                                    Leer <span class="fa fa-arrow-right"></span>
+                                    Leer &rarr;
                                 </a>
                             </div>
                         </div>
@@ -591,7 +611,7 @@ section.w3l-homeblock3 .area-box p {
                         <?php if (!empty($boletin_destacado['archivo_pdf'])): ?>
                             <span>
                                 <a target="_blank" href="<?= htmlspecialchars($boletin_destacado['archivo_pdf']) ?>" class="facebook">
-                                    <span class="fa fa-download"></span>
+                                    &darr;
                                 </a>
                             </span>
                             <h4>Ver Boletín</h4>
@@ -604,7 +624,7 @@ section.w3l-homeblock3 .area-box p {
                 <?php if (!empty($boletin_destacado['foto_portada'])): ?>
                     <img src="<?= htmlspecialchars($boletin_destacado['foto_portada']) ?>" class="img-fluid radius-image" alt="Boletín">
                 <?php else: ?>
-                    <img src="assets/images/boletin-ntep-45.png" class="img-fluid radius-image" alt="Boletín NTEP">
+                    <img src="assets/images/boletines/boletin-ntep-45.png" class="img-fluid radius-image" alt="Boletín NTEP">
                 <?php endif; ?>
             </div>
         </div>
@@ -621,7 +641,7 @@ section.w3l-homeblock3 .area-box p {
                 <?php foreach ($podcasts as $i => $podcast): ?>
                     <div class="col-lg-3 col-sm-6 <?= $i > 0 ? 'mt-5 mt-lg-0' : '' ?>">
                         <div class="area-box">
-                            <img src="assets/images/podcast.png">
+                            <img src="assets/images/podcasts/podcast.png">
                             <p><?= htmlspecialchars($podcast['titulo']) ?></p>
                         </div>
                     </div>
@@ -635,7 +655,7 @@ section.w3l-homeblock3 .area-box p {
 </section>
 
 
-<!-- SECCIÓN VIDEOS (desde la BD) -->
+<!-- SECCIÓN VIDEOS -->
 <section class="w3l-team" id="team">
     <div class="teams1 py-5 mb-3">
         <div class="container py-lg-3 pb-lg-5 pb-4">
@@ -645,10 +665,8 @@ section.w3l-homeblock3 .area-box p {
                     <div class="row justify-content-center">
                         <?php foreach ($videos as $video): ?>
                             <?php
-                            // Extraer el ID de YouTube de la URL
                             $url_video = $video['url_embed'];
                             $video_id = '';
-                            
                             if (preg_match('/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/', $url_video, $m)) {
                                 $video_id = $m[1];
                             } elseif (preg_match('/youtu\.be\/([a-zA-Z0-9_-]+)/', $url_video, $m)) {
@@ -656,26 +674,19 @@ section.w3l-homeblock3 .area-box p {
                             } elseif (preg_match('/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/', $url_video, $m)) {
                                 $video_id = $m[1];
                             }
-                            
-                            $imagen_video = $video_id 
-                                ? "https://img.youtube.com/vi/{$video_id}/hqdefault.jpg" 
-                                : "assets/images/video.jpg";
+                            $imagen_video = $video_id ? "https://img.youtube.com/vi/{$video_id}/hqdefault.jpg" : "assets/images/videos/video.jpg";
                             ?>
                             <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="video-card" style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column;">
-                                    <a href="<?= htmlspecialchars($video['url_embed']) ?>" target="_blank" style="display: block; position: relative; height: 200px; overflow: hidden; background: #000;">
-                                        <img src="<?= $imagen_video ?>" alt="<?= htmlspecialchars($video['titulo']) ?>" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='assets/images/video.jpg'" />
-                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: #e0020d; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(224,2,13,0.5);">
-                                            <i class="fa fa-play" style="color: #fff; font-size: 24px; margin-left: 5px;"></i>
+                                <div class="video-card" data-video-id="<?= htmlspecialchars($video_id) ?>" data-video-titulo="<?= htmlspecialchars($video['titulo']) ?>" style="background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column; cursor: pointer;">
+                                    <div class="video-thumb" style="position: relative; height: 200px; overflow: hidden; background: #000;">
+                                        <img src="<?= $imagen_video ?>" alt="<?= htmlspecialchars($video['titulo']) ?>" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;" onerror="this.src='assets/images/videos/video.jpg'" />
+                                        <div class="play-btn" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; background: #e0020d; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(224,2,13,0.5); transition: transform 0.3s;">
+                                            <span style="color: #fff; font-size: 28px; margin-left: 5px;">&#9654;</span>
                                         </div>
-                                    </a>
+                                    </div>
                                     <div style="padding: 20px; display: flex; flex-direction: column; flex: 1;">
-                                        <h4 style="font-size: 16px; font-weight: 600; color: #1a1a2e; line-height: 1.4; margin-bottom: 10px; flex: 1;">
-                                            <?= htmlspecialchars($video['titulo']) ?>
-                                        </h4>
-                                        <small style="color: #999; font-size: 13px;">
-                                            <i class="far fa-calendar-alt"></i> <?= fechaMes($video['fecha_publicacion']) ?>
-                                        </small>
+                                        <h4 style="font-size: 16px; font-weight: 600; color: #1a1a2e; line-height: 1.4; margin-bottom: 10px; flex: 1;"><?= htmlspecialchars($video['titulo']) ?></h4>
+                                        <small style="color: #999; font-size: 13px;"><?= fechaMes($video['fecha_publicacion']) ?></small>
                                     </div>
                                 </div>
                             </div>
@@ -689,15 +700,65 @@ section.w3l-homeblock3 .area-box p {
     </div>
 </section>
 
+<!-- MODAL DE VIDEO -->
+<div id="videoModal" style="display: none; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center;">
+    <div id="videoModalBackdrop" style="position: absolute; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);"></div>
+    <div style="position: relative; z-index: 1; width: 90%; max-width: 1100px; padding: 20px;">
+        <button id="videoModalClose" title="Cerrar (Esc)" style="position: absolute; top: 10px; right: 10px; z-index: 10; width: 45px; height: 45px; background: #e0020d; color: #fff; border: none; border-radius: 50%; font-size: 22px; cursor: pointer; box-shadow: 0 4px 15px rgba(224,2,13,0.6); transition: transform 0.2s; display: flex; align-items: center; justify-content: center; line-height: 1;">✕</button>
+        <h3 id="videoModalTitle" style="color: #fff; margin-bottom: 15px; font-size: 20px; text-align: center;"></h3>
+        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); background: #000;">
+            <iframe id="videoModalFrame" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+<style>
+.video-card:hover .video-thumb img { transform: scale(1.05); }
+.video-card:hover .play-btn { transform: translate(-50%, -50%) scale(1.15); }
+body.video-modal-open { overflow: hidden; }
+</style>
+
+<script>
+(function() {
+    const modal = document.getElementById('videoModal');
+    const backdrop = document.getElementById('videoModalBackdrop');
+    const closeBtn = document.getElementById('videoModalClose');
+    const frame = document.getElementById('videoModalFrame');
+    const title = document.getElementById('videoModalTitle');
+    function openModal(videoId, videoTitulo) {
+        if (!videoId) { alert('Este video no tiene un ID de YouTube valido'); return; }
+        frame.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+        title.textContent = videoTitulo;
+        modal.style.display = 'flex';
+        document.body.classList.add('video-modal-open');
+    }
+    function closeModal() {
+        frame.src = '';
+        modal.style.display = 'none';
+        document.body.classList.remove('video-modal-open');
+    }
+    document.querySelectorAll('.video-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+            openModal(this.getAttribute('data-video-id'), this.getAttribute('data-video-titulo'));
+        });
+    });
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+    });
+})();
+</script>
+
 <!-- REDES SOCIALES -->
 <div class="middle py-5" style="margin-top: 30px;">
     <div class="container py-xl-5 py-lg-3">
         <div class="welcome-left text-center py-md-5 py-3">
             <h3 class="title-big">Síguenos en nuestras Redes Sociales</h3>
             <div class="main-social-footer-29">
-                <a target="_blank" href="https://www.facebook.com/DialogoyDesarrolloPeru" class="facebook"><span class="fa fa-facebook-square fa-2x"></span></a>
-                <a target="_blank" href="https://www.tiktok.com/@dialogo.y.desarrollo" class="twitter"><img src="assets/images/tiktokg.png"></a>
-                <a target="_blank" href="https://www.instagram.com/dialogo.y.desarrollo/" class="instagram"><span class="fa fa-instagram fa-2x"></span></a>
+                <a target="_blank" href="https://www.facebook.com/DialogoyDesarrolloPeru" class="facebook"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; display:inline-block;"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg></a>
+                <a target="_blank" href="https://www.tiktok.com/@dialogo.y.desarrollo" class="twitter"><img src="assets/images/iconos/tiktokg.png"></a>
+                <a target="_blank" href="https://www.instagram.com/dialogo.y.desarrollo/" class="instagram"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; display:inline-block;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
             </div>
         </div>
     </div>
@@ -712,9 +773,9 @@ section.w3l-homeblock3 .area-box p {
                     <h6 class="footer-title-29">Quiénes Somos</h6>
                     <p>Somos un espacio de periodismo independiente que busca visibilizar las acciones de diálogo en el país desde una mirada constructiva.</p>
                     <div class="main-social-footer-29">
-                        <a target="_blank" href="https://www.facebook.com/DialogoyDesarrolloPeru" class="facebook"><span class="fa fa-facebook-square"></span></a>
-                        <a target="_blank" href="https://www.tiktok.com/@dialogo.y.desarrollo" class="twitter"><img src="assets/images/tiktokp.png"></a>
-                        <a target="_blank" href="https://www.instagram.com/dialogo.y.desarrollo/" class="instagram"><span class="fa fa-instagram"></span></a>
+                        <a target="_blank" href="https://www.facebook.com/DialogoyDesarrolloPeru" class="facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                        <a target="_blank" href="https://www.tiktok.com/@dialogo.y.desarrollo" class="twitter"><img src="assets/images/iconos/tiktokp.png"></a>
+                        <a target="_blank" href="https://www.instagram.com/dialogo.y.desarrollo/" class="instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 footer-list-29 footer-2 mt-md-0 mt-5">
@@ -735,7 +796,7 @@ section.w3l-homeblock3 .area-box p {
             </div>
         </div>
     </div>
-    <button onclick="topFunction()" id="movetop" title="Go to top"><span class="fa fa-angle-up"></span></button>
+    <button onclick="topFunction()" id="movetop" title="Go to top"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" transform="rotate(-90 12 12)"/></svg></button>
 </section>
 
 <script src="assets/js/jquery-3.3.1.min.js"></script>

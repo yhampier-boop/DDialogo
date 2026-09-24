@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // config/database.php
 
 // Lee de variables de entorno (Railway) o usa valores por defecto (local)

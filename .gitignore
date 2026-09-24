@@ -20,3 +20,45 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+# Sensibles (NO subir)
+config/mail.php
+config/database.php.bak*
+config/*.bak*
+backup_*.sql
+base_*.sql
+reset_admin.sql
+estructura.txt
+inventario.txt
+
+# Temporales
+.dsh/
+temp/
+logs/
+
+# SQLs
+*.sql
+
+# ============================================
+# Archivos temporales y sensibles
+# ============================================
+admin_backup/
+temp/
+logs/
+config/mail.php
+config/database.local.php
+config/database.php.bak*
+config/*.bak*
+backup_*.sql
+base_*.sql
+reset_admin.sql
+estructura.txt
+inventario.txt
+.dsh/
+*.zip
+*.bak
+*.bak2
+*.bak_infinity
+*.bak_railway
+
+# Excluir articles/ (son HTML viejos)
+articles/

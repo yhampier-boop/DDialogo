@@ -54,6 +54,11 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
 
 <link rel="stylesheet" href="../../assets/css/admin.css">
 
+<style>
+    .icon-close-x { display: none !important; }
+    button.navbar-toggler[aria-expanded="true"] .icon-bars { display: none !important; }
+    button.navbar-toggler[aria-expanded="true"] .icon-close-x { display: inline-block !important; }
+</style>
 </head>
 
 

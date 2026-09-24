@@ -90,6 +90,25 @@ exit;
 <link rel="stylesheet" href="../../assets/css/admin.css">
 
 
+<!-- FontAwesome preload + fallback inline -->
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+    @font-face {
+        font-family: 'FontAwesome';
+        src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2') format('woff2'),
+             url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff') format('woff'),
+             url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: block;
+    }
+    .fa, .fas, .far, .fab { font-family: 'FontAwesome' !important; }
+</style>
+<style>
+    .icon-close-x { display: none !important; }
+    button.navbar-toggler[aria-expanded="true"] .icon-bars { display: none !important; }
+    button.navbar-toggler[aria-expanded="true"] .icon-close-x { display: inline-block !important; }
+</style>
 </head>
 
 

@@ -23,12 +23,31 @@ $items = $pdo->query("SELECT * FROM noticias ORDER BY fecha_publicacion DESC")->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/admin.css">
+<!-- FontAwesome preload + fallback inline -->
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+    @font-face {
+        font-family: 'FontAwesome';
+        src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2') format('woff2'),
+             url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff') format('woff'),
+             url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: block;
+    }
+    .fa, .fas, .far, .fab { font-family: 'FontAwesome' !important; }
+</style>
+<style>
+    .icon-close-x { display: none !important; }
+    button.navbar-toggler[aria-expanded="true"] .icon-bars { display: none !important; }
+    button.navbar-toggler[aria-expanded="true"] .icon-close-x { display: inline-block !important; }
+</style>
 </head>
 <body>
 
 <div class="sidebar" style="background: #ffffff !important; background-color: #ffffff !important; box-shadow: 2px 0 15px rgba(0,0,0,0.06) !important; border-right: 1px solid #f0f0f0 !important;">
     <div class="logo-container">
-        <img src="../../assets/images/logo.png" alt="Diálogo y Desarrollo">
+        <img src="/Dialogoydesarrollo/assets/images/iconos/logo.png" alt="Diálogo y Desarrollo">
     </div>
     <div class="user-info">
         <div class="name" style="color: #1a1a2e !important;"><?= htmlspecialchars($_SESSION['usuario_nombre'] ?? 'Administrador') ?></div>
