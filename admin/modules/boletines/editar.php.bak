@@ -1,0 +1,193 @@
+﻿<?php
+require_once '../../../config/database.php';
+session_start();
+
+if (!isset($_SESSION['usuario_id'])) {
+    header('Location: ../../login.php');
+    exit;
+}
+
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($id <= 0) { header('Location: index.php'); exit; }
+
+$stmt = $pdo->prepare("SELECT * FROM boletines WHERE id = ?");
+$stmt->execute([$id]);
+$boletin = $stmt->fetch();
+if (!$boletin) { header('Location: index.php'); exit; }
+
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $numero  = trim($_POST['numero_boletin'] ?? '');
+    $resumen = trim($_POST['resumen'] ?? '');
+    $fecha   = $_POST['fecha_publicacion'] ?? '';
+
+    if (empty($numero) || empty($fecha)) {
+        $error = 'Numero y fecha son obligatorios';
+    } else {
+        $rutaPdf   = $boletin['archivo_pdf'];
+        $rutaFoto  = $boletin['foto_portada'];
+        $nuevoPdf  = false;
+        $nuevaFoto = false;
+
+        // Subir nuevo PDF
+        if (isset($_FILES['archivo_pdf']) && $_FILES['archivo_pdf']['error'] === UPLOAD_ERR_OK) {
+            $subida = subirArchivo($_FILES['archivo_pdf'], 'uploads/boletines', ['pdf'], 15);
+            if ($subida['success']) {
+                $rutaPdf = $subida['ruta'];
+                $nuevoPdf = true;
+            } else {
+                $error = 'Error al subir PDF: ' . $subida['mensaje'];
+            }
+        }
+
+        // Subir nueva portada
+        if (empty($error) && isset($_FILES['foto_portada']) && $_FILES['foto_portada']['error'] === UPLOAD_ERR_OK) {
+            $subida = subirArchivo($_FILES['foto_portada'], 'uploads/boletines', ['jpg','jpeg','png','gif','webp'], 3);
+            if ($subida['success']) {
+                $rutaFoto = $subida['ruta'];
+                $nuevaFoto = true;
+            } else {
+                $error = 'Error al subir portada: ' . $subida['mensaje'];
+            }
+        }
+
+        // Eliminar PDF marcado
+        if (isset($_POST['eliminar_pdf']) && $_POST['eliminar_pdf'] == '1') {
+            eliminarArchivo($boletin['archivo_pdf']);
+            $rutaPdf = null;
+            $nuevoPdf = false;
+        }
+
+        // Eliminar portada marcada
+        if (isset($_POST['eliminar_portada']) && $_POST['eliminar_portada'] == '1') {
+            eliminarArchivo($boletin['foto_portada']);
+            $rutaFoto = null;
+            $nuevaFoto = false;
+        }
+
+        if (empty($error)) {
+            $stmt = $pdo->prepare("UPDATE boletines SET numero_boletin = ?, resumen = ?, foto_portada = ?, archivo_pdf = ?, fecha_publicacion = ? WHERE id = ?");
+            $stmt->execute([$numero, $resumen, $rutaFoto, $rutaPdf, $fecha, $id]);
+
+            // Borrar viejos si se subio nuevo
+            if ($nuevoPdf && !empty($boletin['archivo_pdf']) && $boletin['archivo_pdf'] !== $rutaPdf) {
+                eliminarArchivo($boletin['archivo_pdf']);
+            }
+            if ($nuevaFoto && !empty($boletin['foto_portada']) && $boletin['foto_portada'] !== $rutaFoto) {
+                eliminarArchivo($boletin['foto_portada']);
+            }
+
+            header('Location: index.php?mensaje=editado');
+            exit;
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Editar Boletin</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="../../assets/css/admin.css">
+</head>
+<body>
+<?php include '../../includes/sidebar.php'; ?>
+<div class="main-content">
+<div class="table-container">
+<div class="table-header">
+<h4><i class="fas fa-edit"></i> Editar Boletin</h4>
+</div>
+
+<?php if ($error): ?>
+<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($error) ?></div>
+<?php endif; ?>
+
+<form method="POST" enctype="multipart/form-data">
+
+<div class="mb-3">
+<label>Numero de boletin</label>
+<input class="form-control" name="numero_boletin" required maxlength="50" value="<?= htmlspecialchars($boletin['numero_boletin']) ?>">
+</div>
+
+<div class="mb-3">
+<label>Resumen</label>
+<textarea class="form-control" name="resumen" rows="4"><?= htmlspecialchars($boletin['resumen'] ?? '') ?></textarea>
+</div>
+
+<div class="mb-3">
+<label>Imagen de portada</label>
+<?php if (!empty($boletin['foto_portada']) && file_exists(__DIR__ . '/../../../' . $boletin['foto_portada'])): ?>
+<div style="margin-bottom:15px;">
+<img src="../../../<?= htmlspecialchars($boletin['foto_portada']) ?>" style="max-width:250px; border-radius:8px;">
+<div class="form-check" style="margin-top:8px;">
+<input type="checkbox" name="eliminar_portada" value="1" class="form-check-input" id="elimPortada">
+<label for="elimPortada" class="form-check-label" style="color:#e0020d;">
+<i class="fas fa-trash"></i> Eliminar portada actual
+</label>
+</div>
+</div>
+<?php else: ?>
+<p style="color:#999; font-style:italic;">Sin portada actual</p>
+<?php endif; ?>
+<input type="file" name="foto_portada" class="form-control" accept="image/*" id="inputFoto">
+<small class="text-muted">Maximo 3 MB. Deja vacio para mantener la actual.</small>
+<div id="preview" style="margin-top:15px; display:none;">
+<img id="imgPreview" style="max-width:300px; border-radius:8px;">
+</div>
+</div>
+
+<div class="mb-3">
+<label>Archivo PDF</label>
+<?php if (!empty($boletin['archivo_pdf']) && file_exists(__DIR__ . '/../../../' . $boletin['archivo_pdf'])): ?>
+<div style="margin-bottom:15px; padding:10px; background:#f9f9f9; border-radius:8px;">
+<i class="fas fa-file-pdf" style="color:#e0020d; font-size:20px;"></i>
+<a href="../../../<?= htmlspecialchars($boletin['archivo_pdf']) ?>" target="_blank" style="margin-left:8px;">Ver PDF actual</a>
+<div class="form-check" style="margin-top:8px;">
+<input type="checkbox" name="eliminar_pdf" value="1" class="form-check-input" id="elimPdf">
+<label for="elimPdf" class="form-check-label" style="color:#e0020d;">
+<i class="fas fa-trash"></i> Eliminar PDF actual
+</label>
+</div>
+</div>
+<?php else: ?>
+<p style="color:#999; font-style:italic;">Sin PDF actual</p>
+<?php endif; ?>
+<input type="file" name="archivo_pdf" class="form-control" accept=".pdf,application/pdf">
+<small class="text-muted">Maximo 15 MB. Solo PDF. Deja vacio para mantener el actual.</small>
+</div>
+
+<div class="mb-3">
+<label>Fecha publicacion</label>
+<input type="date" class="form-control" name="fecha_publicacion" required value="<?= htmlspecialchars($boletin['fecha_publicacion']) ?>">
+</div>
+
+<button type="submit" class="btn-add"><i class="fas fa-save"></i> Actualizar</button>
+<a href="index.php" class="btn btn-secondary">Cancelar</a>
+
+</form>
+</div>
+</div>
+
+<script>
+document.getElementById('inputFoto').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 3 * 1024 * 1024) {
+        alert('La imagen pesa ' + (file.size / 1024 / 1024).toFixed(1) + ' MB. Maximo: 3 MB');
+        e.target.value = '';
+        document.getElementById('preview').style.display = 'none';
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+        document.getElementById('imgPreview').src = ev.target.result;
+        document.getElementById('preview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+});
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 require_once '../../../config/database.php';
 
@@ -10,31 +10,71 @@ if (!isset($_SESSION['usuario_id'])) {
 }
 
 
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+
+if ($id <= 0) {
+    header('Location:index.php');
+    exit;
+}
+
+
+$stmt = $pdo->prepare("
+SELECT *
+FROM noticias
+WHERE id=?
+");
+
+$stmt->execute([$id]);
+
+$noticia = $stmt->fetch();
+
+
+if (!$noticia) {
+    header('Location:index.php');
+    exit;
+}
+
+
+
 if ($_SERVER['REQUEST_METHOD']=='POST') {
 
 
-    $titulo = $_POST['titulo'];
-    $url = $_POST['url_embed'];
-    $fecha = $_POST['fecha_publicacion'];
+$titulo = $_POST['titulo'];
+
+$link = $_POST['link_externo'];
+
+$fecha = $_POST['fecha_publicacion'];
 
 
-    $stmt = $pdo->prepare("
-    INSERT INTO videos
-    (titulo,url_embed,fecha_publicacion,usuario_id)
-    VALUES (?,?,?,?)
-    ");
+
+$update = $pdo->prepare("
+UPDATE noticias SET
+
+titulo=?,
+link_externo=?,
+fecha_publicacion=?
+
+WHERE id=?
+
+");
 
 
-    $stmt->execute([
-        $titulo,
-        $url,
-        $fecha,
-        $_SESSION['usuario_id']
-    ]);
+$update->execute([
+
+$titulo,
+$link,
+$fecha,
+$id
+
+]);
 
 
-    header('Location:index.php?mensaje=creado');
-    exit;
+
+header('Location:index.php?mensaje=editado');
+
+exit;
+
 
 }
 
@@ -42,23 +82,22 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
 
 
 <!DOCTYPE html>
+
 <html lang="es">
 
 <head>
 
 <meta charset="UTF-8">
 
-<title>Nuevo Video</title>
+<title>Editar Noticia</title>
+
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+
 <link rel="stylesheet" href="../../assets/css/admin.css">
 
-<style>
-    .icon-close-x { display: none !important; }
-    button.navbar-toggler[aria-expanded="true"] .icon-bars { display: none !important; }
-    button.navbar-toggler[aria-expanded="true"] .icon-close-x { display: inline-block !important; }
-</style>
+
 </head>
 
 
@@ -77,11 +116,8 @@ if ($_SERVER['REQUEST_METHOD']=='POST') {
 <div class="table-header">
 
 <h4>
-
-<i class="fas fa-video"></i>
-
-Nuevo Video
-
+<i class="fas fa-edit"></i>
+Editar Noticia
 </h4>
 
 </div>
@@ -99,6 +135,7 @@ Nuevo Video
 type="text"
 name="titulo"
 class="form-control"
+value="<?= htmlspecialchars($noticia['titulo']) ?>"
 required>
 
 </div>
@@ -107,13 +144,13 @@ required>
 
 <div class="mb-3">
 
-<label>URL Embed</label>
+<label>Link externo</label>
 
 <input 
 type="text"
-name="url_embed"
+name="link_externo"
 class="form-control"
-required>
+value="<?= htmlspecialchars($noticia['link_externo']) ?>">
 
 </div>
 
@@ -127,6 +164,7 @@ required>
 type="date"
 name="fecha_publicacion"
 class="form-control"
+value="<?= $noticia['fecha_publicacion'] ?>"
 required>
 
 </div>
@@ -137,7 +175,7 @@ required>
 
 <i class="fas fa-save"></i>
 
-Guardar
+Actualizar
 
 </button>
 
@@ -162,3 +200,5 @@ Cancelar
 </body>
 
 </html>
+
+

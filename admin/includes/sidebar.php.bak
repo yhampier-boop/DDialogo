@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 $modulo_activo = $modulo_activo ?? '';
 ?>
 
 <div class="sidebar">
 
     <div class="logo-container">
-        <img src="/Dialogoydesarrollo/assets/images/iconos/logo.png" alt="Diálogo y Desarrollo">
+        <img src="/Dialogoydesarrollo/admin/assets/images/iconos/logo.png" alt="Diálogo y Desarrollo">
     </div>
 
     <div class="user-info">
