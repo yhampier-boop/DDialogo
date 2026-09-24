@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // admin/login.php
 require_once __DIR__ . '/../config/database.php';
 session_start();
@@ -172,6 +172,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-size: 12px;
         }
     </style>
+<!-- FontAwesome preload + fallback inline -->
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+    @font-face {
+        font-family: 'FontAwesome';
+        src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff2') format('woff2'),
+             url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.woff') format('woff'),
+             url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: block;
+    }
+    .fa, .fas, .far, .fab { font-family: 'FontAwesome' !important; }
+</style>
+<style>
+    .icon-close-x { display: none !important; }
+    button.navbar-toggler[aria-expanded="true"] .icon-bars { display: none !important; }
+    button.navbar-toggler[aria-expanded="true"] .icon-close-x { display: inline-block !important; }
+</style>
 </head>
 <body>
 
@@ -179,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="login-card">
             
             <div class="login-header">
-                <img src="../assets/images/logo.png" alt="Diálogo y Desarrollo" class="logo">
+                <img src="/Dialogoydesarrollo/assets/images/iconos/logo.png" alt="Diálogo y Desarrollo" class="logo">
                 <h1>Panel de Administración</h1>
                 <p>Diálogo y Desarrollo Perú</p>
             </div>
@@ -207,6 +226,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
             
             <div class="footer-text">
+                <p style="margin-bottom:10px;">
+                    <a href="recuperar.php" style="color:#e0020d; text-decoration:none; font-size:13px;">
+                        <i class="fas fa-question-circle"></i> ¿Olvidaste tu contraseña?
+                    </a>
+                </p>
+
                 &copy; <?= date('Y') ?> Diálogo y Desarrollo Perú
             </div>
             

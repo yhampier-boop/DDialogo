@@ -34,3 +34,11 @@ RedirectMatch 403 /\..*$
 
 # Limitar tamano de subida (10 MB)
 LimitRequestBody 10485760
+# ============================================
+# Produccion: no mostrar errores
+# ============================================
+php_flag display_errors Off
+php_flag display_startup_errors Off
+php_value error_reporting 0
+
+# ============================================
