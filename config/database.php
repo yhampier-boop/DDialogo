@@ -1,11 +1,11 @@
-<?php
+﻿<?php
 // config/database.php
 
 // Lee de variables de entorno (Railway) o usa valores por defecto (local)
-$host     = $_ENV['DB_HOST']     ?? getenv('DB_HOST')     ?: 'localhost';
-$dbname   = $_ENV['DB_NAME']     ?? getenv('DB_NAME')     ?: 'dialogodesarrollo';
-$username = $_ENV['DB_USER']     ?? getenv('DB_USER')     ?: 'root';
-$password = $_ENV['DB_PASS']     ?? getenv('DB_PASS')     ?: '';
+$host = getenv('DB_HOST') ?: 'localhost';
+$dbname = getenv('DB_NAME') ?: 'dialogodesarrollo';
+$username = getenv('DB_USER') ?: 'root';
+$password = getenv('DB_PASS') ?: '';
 $port     = $_ENV['DB_PORT']     ?? getenv('DB_PORT')     ?: '3306';
 
 try {
