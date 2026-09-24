@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // config/session.php
 // Iniciar sesion de forma segura
 

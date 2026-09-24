@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // admin/modules/podcasts/index.php
 require_once '../../../config/database.php';
 session_start();

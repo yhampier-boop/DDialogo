@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $modulo_activo = $modulo_activo ?? '';
 ?>
 
