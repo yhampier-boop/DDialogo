@@ -1,10 +1,22 @@
-config.local.php
-*.env
-.env
+﻿# Dependencias
+/vendor/
+/node_modules/
+
+# Configuracion sensible
+/config/mail.local.php
+
+# Archivos temporales
+*.tmp
+*.log
+*.bak
+*.bak2
+*.old
+*.zip
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# IDE
 .vscode/
 .idea/
-node_modules/
-*.log
-*.tmp
-uploads/*
-!uploads/.gitkeep
